@@ -7,7 +7,7 @@ As a first round of our hiring process, we want to see your technical ability. P
 
 This repository contains a little Golang application in `app` folder. You need to set up a complete end-to-end CI/CD pipeline, that will build & deploy an application on every commit to `master` branch.
 
-You can read more about the application and it's dependencies in `app/README.md` file. You may encounter an error when you run it - fixing them is part of the task. Don't worry, it's not in the source code :)
+You can read more about the application and it's dependencies in `app/README.md` file.
 
 Please, clone this repo to your public GitHub, GitLab, BitBucket or other git service and go on from there. After you're done, please send us link to your repository.
 
