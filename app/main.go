@@ -19,6 +19,10 @@ func getDb() *redis.Client {
 	dbPort := getConfig("ERVCP_DB_PORT", "")
 	dbPw := getConfig("ERVCP_DB_PW", "")
 
+	if dbHost == "" || dbPort == "" {
+		panic("Database Connection not configured!")
+	}
+
 	db := redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s:%s", dbHost, dbPort),
 		Password: dbPw,

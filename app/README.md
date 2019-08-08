@@ -1,10 +1,12 @@
 # ERVCP
 
-ERVCP is a first, one-of-a-kind Enterprise-Ready Visitor Counting Platform. Every time someone visits your website, the counter goes up.
+ERVCP is a first in it's class, one of a kind Enterprise-Ready Visitor Counting Platform. Every time someone visits your website, the counter goes up.
 
 ## Dependencies
 
-This application uses Redis to store the data. Supported version is `5.0`.
+This application is written in [Go](https://golang.org/). Supported version is `1.12`.
+
+This application uses [Redis](https://redis.io/) to store the data. Supported version is `5.0`.
 
 ## Configuring
 
@@ -15,13 +17,17 @@ This application is configured via environment variables:
 * `ERVCP_DB_PORT` - Redis port
 * `ERVCP_DB_PW` - Redis password
 
-## Running
+## Building and running
 
-Simply type:
+To build the application, run:
 
-    go run main.go
+    go build
 
-in your terminal, then open the app in your browser. By default, it'll run on http://localhost:8080.
+This will create binary `ervcp` that you can run:
+
+    ervcp
+
+By default, ERVCP run on http://localhost:8080.
 
 
 ## Credits

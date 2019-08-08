@@ -5,7 +5,7 @@ As a first round of our hiring process, we want to see your technical ability. P
 
 ## Goal
 
-This repository contains a little Golang application in `app` folder2. You need to set up a complete end-to-end CI/CD pipeline, that will build & deploy an application on every commit to `master` branch.
+This repository contains a little Golang application in `app` folder. You need to set up a complete end-to-end CI/CD pipeline, that will build & deploy an application on every commit to `master` branch.
 
 You can read more about the application and it's dependencies in `app/README.md` file. You may encounter an error when you run it - fixing them is part of the task. Don't worry, it's not in the source code :)
 
@@ -19,7 +19,7 @@ The main evaluation criteria is that the CI/CD pipeline works. Application has t
 
 Apart from that we will evaluate:
 * tools that you've picked
-* corret usage of said tools
+* correct usage of said tools
 * code readability
 * solution flexibility & extensibility
 
