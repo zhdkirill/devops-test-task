@@ -64,6 +64,8 @@ jobs:
     needs: [build-and-publish, k8s-test]
     runs-on: ubuntu-latest
     steps:
+    - name: 'Checkout GitHub Action'
+      uses: actions/checkout@main
     # Set the target Azure Kubernetes Service (AKS) cluster.
     - uses: azure/aks-set-context@v1
       with:
