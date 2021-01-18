@@ -35,11 +35,12 @@ _Ataccama Cloud Solutions team_
 My solution utilizes only GitHub and Azure services and does not require any other services, servers or local commands to run.
 
 ## Prerequisites
-The pipeline requires a few pre-confugured Azure resources:
+The pipeline requires a few pre-configured Azure resources:
 - resource group to group the services
 - container registry to store application images
 - kubernetes service to run the application
 - service principal for authentication
+
 These resources need to be created only once.
 
 ## Architecture
@@ -47,16 +48,20 @@ The pipeline is executed by GitHub Actions on each `push` to the repository.
 
 ### Step 1: Testing
 Golang code is being verified by a linter: https://github.com/golangci/golangci-lint
+
 If the code fails to pass the test, the application would not be built and published.
+
 There is also an additional action with the same linter that is triggered on pull requests and does not build a package.
 
 ### Step 2: Packaging
 The application will be distributed as a docker image.
-Fist, the application is being built via golang container. After that the resulting binary is being copied to another alpine-based container without go runtime. Such strategy reduces the size of the resulting image.
+
+First, the application is being built via golang container. After that, the resulting binary is being copied to another alpine-based container without go runtime. Such strategy reduces the size of the resulting image.
 
 ### Step 3: Publishing
 Container image of the application is published in an Azure container registry repository. The images are tagged with the commit hash.
 
 ### Step 4: Deploying
 The application is being deployed as a microservice to Azure Kubernetes Service.
+
 The application requires redis database, so there are two deployments and services: ervcp and redis. Redis is exposed as a service inside the cluster, while ERVCP application service is exposed via ingress loadbalancer to the internet. The application is available over FQDN provided by Azure: http://ervcp.germanywestcentral.cloudapp.azure.com/
