@@ -57,8 +57,10 @@ jobs:
     - uses: azure/k8s-deploy@v1
       with:
         manifests: |
-          manifests/deployment.yml
-          manifests/service.yml
+          manifests/redis-deployment.yml
+          manifests/redis-service.yml
+          manifests/ervcp-deployment.yml
+          manifests/ervcp-service.yml
         images: |
           ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.APP_NAME }}:${{ github.sha }}
         imagepullsecrets: |
