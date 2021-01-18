@@ -5,9 +5,11 @@ metadata:
   namespace: ervcp
   labels:
     app: ervcp
+  annotations:
+    service.beta.kubernetes.io/azure-dns-label-name: ervcp
 spec:
   ports:
-  - port: 8080
+  - port: 80
     targetPort: 8080
   selector:
     app: ervcp
