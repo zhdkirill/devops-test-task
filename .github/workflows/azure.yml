@@ -10,18 +10,29 @@ env:
   APP_NAME: ervcp
 
 jobs:
-  build-and-deploy:
+  golang-test:
+    name: lint
     runs-on: ubuntu-latest
     steps:
-    # checkout the repo
+    - uses: actions/checkout@v2
+    - name: golangci-lint
+      uses: golangci/golangci-lint-action@v2
+      with:
+        version: v1.29
+        working-directory: app
+
+  build-and-deploy:
+    needs: golang-test
+    runs-on: ubuntu-latest
+    steps:
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@main
-      
+
     - name: 'Login via Azure CLI'
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-    
+
     - name: 'Build and push image'
       uses: azure/docker-login@v1
       with:
@@ -29,8 +40,8 @@ jobs:
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
     - run: |
-        docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/ervcp:${{ github.sha }}
-        docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/ervcp:${{ github.sha }}
+        docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.APP_NAME }}:${{ github.sha }}
+        docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.APP_NAME }}:${{ github.sha }}
 
     # Set the target Azure Kubernetes Service (AKS) cluster.
     - uses: azure/aks-set-context@v1
@@ -38,11 +49,11 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
         cluster-name: ${{ env.CLUSTER_NAME }}
         resource-group: ${{ env.CLUSTER_RESOURCE_GROUP }}
-    
+
     # Create namespace if doesn't exist
     - run: |
         kubectl create namespace ${{ env.NAMESPACE }} --dry-run -o json | kubectl apply -f -
-    
+
     # Create image pull secret for ACR
     - uses: azure/k8s-create-secret@v1
       with:
@@ -52,7 +63,7 @@ jobs:
         secret-name: ${{ env.SECRET }}
         namespace: ${{ env.NAMESPACE }}
         force: true
-    
+
     # Deploy app to AKS
     - uses: azure/k8s-deploy@v1
       with:
