@@ -11,7 +11,7 @@ env:
 
 jobs:
   golang-test:
-    name: lint
+    name: golang-lint
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -21,7 +21,7 @@ jobs:
         version: v1.29
         working-directory: app
 
-  build-and-deploy:
+  build-and-publish:
     needs: golang-test
     runs-on: ubuntu-latest
     steps:
@@ -43,6 +43,11 @@ jobs:
         docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.APP_NAME }}:${{ github.sha }}
         docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.APP_NAME }}:${{ github.sha }}
 
+  deploy:
+    name: "deploy to AKS"
+    needs: build-and-publish
+    runs-on: ubuntu-latest
+    steps:
     # Set the target Azure Kubernetes Service (AKS) cluster.
     - uses: azure/aks-set-context@v1
       with:
@@ -62,7 +67,6 @@ jobs:
         container-registry-password: ${{ secrets.REGISTRY_PASSWORD }}
         secret-name: ${{ env.SECRET }}
         namespace: ${{ env.NAMESPACE }}
-        force: true
 
     # Deploy app to AKS
     - uses: azure/k8s-deploy@v1
