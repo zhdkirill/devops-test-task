@@ -33,4 +33,5 @@ spec:
             memory: 1Gi
         ports:
         - containerPort: 8080
-      imagePullSecrets: acr-secret
+      imagePullSecrets:
+        - name: acr-secret
