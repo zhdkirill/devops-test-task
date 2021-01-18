@@ -30,3 +30,28 @@ This task is loosely-defined on purpose. With DevOps being a set of practices at
 Good luck, and hope to hear back from you soon!
 
 _Ataccama Cloud Solutions team_
+
+# Solution description
+My solution utilizes only GitHub and Azure services and does not require any other services, servers or local commands to run.
+
+## Prerequisites
+The pipeline requires a few pre-confugured Azure resources:
+- resource group to group the services
+- container registry to store application images
+- kubernetes service to run the application
+- service principal for authentication
+These resources need to be created only once.
+
+## Architecture
+The pipeline is executed by GitHub Actions on each `push` to the repository.
+
+### Step 1: Packaging
+The application will be distributed as a docker image.
+Fist, the application is being built via golang container. After that the resulting binary is being copied to another alpine-based container without go runtime. Such strategy reduces the size of the resulting image.
+
+### Step 2: Publishing
+Container image of the application is published in an Azure container registry repository. The images are tagged with the commit hash.
+
+### Step 3: Deploying
+The application is being deployed as a microservice to Azure Kubernetes Service.
+The application requires redis database, so there are two deployments and services: ervcp and redis. Redis is exposed as a service inside the cluster, while ERVCP application service is exposed via ingress loadbalancer to the internet. The application is available over FQDN provided by Azure: http://ervcp.germanywestcentral.cloudapp.azure.com/
