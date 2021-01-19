@@ -5,7 +5,7 @@ name: ervcp-ci
 env:
   CLUSTER_NAME: ervcp-aks
   CLUSTER_RESOURCE_GROUP: ataccama
-  NAMESPACE: ervcp
+  NAMESPACE: ${{ github.sha }}
   SECRET: acr-secret
   APP_NAME: ervcp
 
@@ -99,3 +99,5 @@ jobs:
         imagepullsecrets: |
           ${{ env.SECRET }}
         namespace: ${{ env.NAMESPACE }}
+    - run: |
+        kubectl get svc/ervcp --namespace ${{ env.NAMESPACE }} -o="jsonpath={.status.loadBalancer.ingress[].ip}"
