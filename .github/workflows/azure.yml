@@ -99,5 +99,6 @@ jobs:
         imagepullsecrets: |
           ${{ env.SECRET }}
         namespace: ${{ env.NAMESPACE }}
-    - run: |
-        echo $(kubectl get svc/ervcp --namespace ${{ env.NAMESPACE }} -o="jsonpath={.status.loadBalancer.ingress[].ip}")
+    - name: 'Get service IP address'
+      run: |
+        kubectl get svc/ervcp --namespace ${{ env.NAMESPACE }} -o="jsonpath={.status.loadBalancer.ingress[].ip}"
