@@ -100,4 +100,4 @@ jobs:
           ${{ env.SECRET }}
         namespace: ${{ env.NAMESPACE }}
     - run: |
-        kubectl get svc/ervcp --namespace ${{ env.NAMESPACE }} -o="jsonpath={.status.loadBalancer.ingress[].ip}"
+        echo $(kubectl get svc/ervcp --namespace ${{ env.NAMESPACE }} -o="jsonpath={.status.loadBalancer.ingress[].ip}")
