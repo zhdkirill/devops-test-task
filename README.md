@@ -35,7 +35,7 @@ _Ataccama Cloud Solutions team_
 My solution utilizes only GitHub and Azure services and does not require any other services, servers or local commands to run.
 
 ## Prerequisites
-The pipeline requires a few pre-configured Azure resources:
+The pipeline requires a few pre-created Azure resources:
 - resource group to group the services
 - container registry to store application images
 - kubernetes service to run the application
@@ -44,14 +44,14 @@ The pipeline requires a few pre-configured Azure resources:
 These resources need to be created only once.
 
 ## Architecture
-The pipeline is executed by GitHub Actions on each `push` to the repository.
+The pipeline is executed by GitHub Actions on each `pull request` or `push` to the repository.
 
 ### Step 1: Testing
 Golang code is being verified by a linter: https://github.com/golangci/golangci-lint
 
 If the code fails to pass the test, the application would not be built and published.
 
-There is also an additional action with the same linter that is triggered on pull requests and does not build a package.
+The same approach goes for kubernetes manifests verification: the linter checks manifest files and prevents deployment if manifests are wrong.
 
 ### Step 2: Packaging
 The application will be distributed as a docker image.
@@ -64,4 +64,13 @@ Container image of the application is published in an Azure container registry r
 ### Step 4: Deploying
 The application is being deployed as a microservice to Azure Kubernetes Service.
 
-The application requires redis database, so there are two deployments and services: ervcp and redis. Redis is exposed as a service inside the cluster, while ERVCP application service is exposed via ingress loadbalancer to the internet. The application is available over FQDN provided by Azure: http://ervcp.germanywestcentral.cloudapp.azure.com/
+The application requires redis database, so there are two deployments and services: ervcp and redis. Redis is exposed as a service inside the cluster, while ERVCP application service is exposed via ingress loadbalancer to the internet. The application is available via a public IP address that can be acquired from the job run.
+
+Each run creates a new kubernetes namespace, so each run is independent and multiple runs can be done in parallel.
+
+## Next steps
+There are several ways to improve this workflow further:
+- make use of Helm to parameterize manifests for increased flexibility
+- create image promotion workflow for validated images
+- create workflow to build the latest stable release based on verified images
+- add monitoring stack to every deployment to collect application metrics during its lifecycle
